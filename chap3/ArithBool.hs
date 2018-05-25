@@ -28,28 +28,7 @@ isVal = (||) <$> boolVal <*> numVal
 
 smallStepEval :: Term -> Maybe Term
 smallStepEval t = case t of
-  T -> Nothing
-  F -> Nothing
-  If t1 t2 t3 -> case t2 of
-                   T -> Just t2
-                   F -> Just t3
-                   _ -> If <$> (smallStepEval t1) <*> pure t2 <*> pure t3
-  Zero    -> Nothing
-  Succ t1 -> Succ <$> (smallStepEval t1)
-  Pred t  -> case t of
-               Zero -> Just Zero
-               Succ n | numVal n -> Just n
-               _ -> Pred <$> (smallStepEval t)
-  IsZero t -> case t of
-                Zero -> Just T
-                Succ n | numVal n -> Just F
-                _ -> IsZero <$> (smallStepEval t)
-
-eval :: Term -> Term
-eval t = case smallStepEval t of
-  Nothing -> t
-  Just t' -> eval t'
-
+  _ -> undefined
 
 bigStepEval :: Term -> Term
 bigStepEval term = case term of
@@ -65,5 +44,5 @@ bigStepEval term = case term of
                 Zero   -> T
                 Succ n | numVal n  -> F
   If t1 t2 t3 -> case bigStepEval t1 of
-    T  ->  bigStepEval t2
-    F  -> bigStepEval t3
+                   T  ->  bigStepEval t2
+                   F  -> bigStepEval t3
